@@ -1,10 +1,10 @@
-package Servidor;
+package Server;
 
 public class ServerClientManage {
 
     public void listenConnection(Boolean nuevo,String nickname){
         //filtro
-        if(nuevo==false){
+        if(!nuevo){
             serchGameInProgress(nickname);
         }else {
             newGame(nickname);
