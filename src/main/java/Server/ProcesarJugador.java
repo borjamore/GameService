@@ -12,8 +12,9 @@ public class ProcesarJugador implements Runnable{
     public void run() {
 
     }
+
     //Analizamos si la peticion es para cerrar un juego o buscar una nueva partida
-    private void leerPeticion{
+    private void leerPeticion(){
 
     }
 
