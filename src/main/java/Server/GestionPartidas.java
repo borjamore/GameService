@@ -6,8 +6,7 @@ import Entity.Jugador;
  * Aqui vemos el tipo de partida que quiere el jugador, buscamos si hay alguna creada a la espera o
  * creamos una a la espera
  */
-public class BuscarPartida {
-
+public class GestionPartidas {
     //Buscamos en la lista del tipo de juego que quiere el jugador a ver si hay alguna disponible
     private void buscarEnLista(){
         //si no hay cramos una nuevaPartida();
