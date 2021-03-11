@@ -1,5 +1,7 @@
 package Entity;
 
+import java.net.Socket;
+
 public class Jugador {
 
     private String nickname;
@@ -9,6 +11,16 @@ public class Jugador {
     private String ip;
 
     private String puerto;
+
+    public Socket getJugador() {
+        return jugador;
+    }
+
+    public void setJugador(Socket jugador) {
+        this.jugador = jugador;
+    }
+
+    private Socket jugador;
 
     public String getJuego() {
         return juego;

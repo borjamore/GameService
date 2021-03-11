@@ -11,13 +11,11 @@ import java.net.Socket;
 public class GestionPeticiones implements Runnable {
 
     Socket soket;
-    Jugador jugador = new Jugador();
+    GestionPartidas gestionPartidas = new GestionPartidas();
 
     GestionPeticiones(Socket socket) {
         this.soket = socket;
     }
-
-    ;
 
     //Hilo de conexion con el cliente
     @Override
@@ -27,13 +25,24 @@ public class GestionPeticiones implements Runnable {
              BufferedReader bfr = new BufferedReader(isr);
              OutputStream os = soket.getOutputStream();
              PrintWriter pw = new PrintWriter(os)) {
-
-            int tipo = leerPeticion(bfr.readLine());
-            if (tipo == 0) {
-                //Creanmos un nuevo juego
-            } else if (tipo == 1) {
-                //cerramos la partida
-                cerrarJuego();
+            //Separamos el mensaje de la peticion enviado, separado por |
+            String[] pericion = bfr.readLine().split("\\|");
+            //Comparamos el primer parametro que indica el tipo de petición
+            if (pericion[0].equals("0")) {
+                //Generamos un nuevo jugador para buscar una nueva partida
+                gestionPartidas.buscarEnLista(
+                        nuevoJugador(soket, pericion[1], pericion[2], soket.getInetAddress().toString(), soket.getPort()));
+            } else if (pericion[0].equals("1")) {
+                //cerramos la partid
+                try {
+                    gestionPartidas.cerrarJuego(pericion[1]);
+                    pw.println("Partida acabada");
+                } catch (Exception e) {
+                    pw.println("Error, no se ha podido borrar");
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("error tipo no valido");
             }
 
         } catch (IOException e) {
@@ -41,47 +50,23 @@ public class GestionPeticiones implements Runnable {
         }
     }
 
-}
-
     /**
-     * Leemos la primera cadena de la petición y devolvevos un valor
-     * 0-> Nuevo juego
-     * 1-> Cerrrar una partida
-     * -1-> Error parametro recivido no valido
-     * -2 -> No se han recivido parametros
+     * Generamos un nuevo jugador
      *
-     * @param peticion el mensajemandado por el cliente
-     * @return un valor de selecion numerico
+     * @param socket socket del jugador clietne
+     * @param nick   su nick
+     * @param juego  su tipo de juego
+     * @param ip     su ip
+     * @param puerto su puerto
+     * @return jugador contruido
      */
-    private int leerPeticion(String peticion) {
-        int tipo = -2;
-        if (peticion.equals("cerrar")) {
-            tipo = 1;
-        } else if (peticion.equals("jugar")) {
-            tipo = 0;
-        } else {
-            tipo = -1;
-        }
-        return tipo;
-    }
-
-    //Buscamos el juego y lo cerramos de la lista
-    private void cerrarJuego( /*La identificación de la partida*/) {
-
-    }
-
-    //Generamos un Jugador nuevo y lo mandamos al emparejador de partidas--> "BuscarPartida" Class
-    private void nuevaPartida() {
-
-    }
-
-    //Crear un Jugador
-    private Jugador nuevoJugador(String nickname, String juego, String ip, String puerto) {
+    private Jugador nuevoJugador(Socket socket, String nick, String juego, String ip, int puerto) {
         Jugador j = new Jugador();
-        j.setNickname(nickname);
+        j.setNickname(nick);
         j.setJuego(juego);
         j.setIp(ip);
-        j.setPuerto(puerto);
+        j.setPuerto(String.valueOf(puerto));
+        j.setJugador(socket);
         return j;
     }
 
