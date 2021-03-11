@@ -70,6 +70,11 @@ public class GestionPartidas {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -82,6 +87,11 @@ public class GestionPartidas {
         try (OutputStream os = socket.getOutputStream();
              PrintWriter pw = new PrintWriter(os)) {
             pw.println(false + "|" + jugador.getIp() + "|" + jugador.getPuerto());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
